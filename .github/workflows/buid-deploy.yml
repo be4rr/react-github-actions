@@ -1,0 +1,29 @@
+name: Build React application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles("package-lock.json") }}
+          restore-keys: npm-
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
