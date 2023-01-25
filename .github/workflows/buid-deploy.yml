@@ -1,4 +1,4 @@
-name: Build React application
+name: Build and Deploy React Application
 
 on:
   push:
@@ -32,3 +32,17 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./dist
+  
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
